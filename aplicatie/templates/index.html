@@ -20,7 +20,7 @@
 
         /* Partea de sus (Header) */
         header {
-            display: flex;
+            display: flex; /* Corecție pentru alinierea elementelor */
             align-items: center;
             justify-content: space-between;
             height: 60px;
@@ -42,12 +42,12 @@
 
         .search-container input {
             width: 300px;
-            padding: 8px 15px; /* Am mărit puțin padding-ul pentru a arăta bine cu marginile rotunjite */
+            padding: 8px 15px;
             border: 1px solid #000;
-            border-radius: 20px; /* Colțuri mult mai rotunjite pentru bara de search */
+            border-radius: 20px;
         }
 
-        /* Spațiator gol pentru a păstra bara de search perfect în mijloc */
+        /* Spațiator gol */
         .header-spacer {
             width: 200px;
         }
@@ -69,19 +69,102 @@
         }
 
         .left-panel button {
+            width: 100%;
             padding: 10px;
             cursor: pointer;
             border: 1px solid #000;
-            border-radius: 10px; /* Colțuri rotunjite pentru butoane */
-            background-color: transparent; /* Păstrăm designul simplu */
+            border-radius: 10px;
+            background-color: transparent;
+            text-align: left;
+            font-weight: bold;
+            transition: background 0.2s;
         }
 
-        /* Panoul central gol */
+        .left-panel button:hover {
+            background-color: #f5f5f5;
+        }
+
+        /* Containere pentru meniuri dropdown */
+        .menu-container {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        /* Subpanouri pentru opțiuni */
+        .sub-panel {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            padding-left: 15px;
+        }
+
+        .sub-panel.active {
+            display: flex;
+        }
+
+        /* Butoanele din interiorul subpanourilor */
+        .sub-panel button {
+            padding: 8px 12px;
+            font-size: 0.9rem;
+            font-weight: normal;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .sub-panel button:hover {
+            background-color: #eaeaea;
+        }
+
+        /* Panoul central cu conținut dinamic */
         .center-panel {
             flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
 
-        /* Panoul lateral dreapta gol */
+        .skill-card {
+            border: 1px solid #000;
+            border-radius: 15px;
+            padding: 20px;
+            max-width: 500px;
+        }
+
+        .skill-card h2 {
+            margin-bottom: 10px;
+            font-size: 1.5rem;
+        }
+
+        .skill-card p {
+            color: #555;
+            line-height: 1.5;
+            margin-bottom: 15px;
+        }
+
+        .skill-badge {
+            display: inline-block;
+            padding: 5px 10px;
+            background-color: #000;
+            color: #fff;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .job-list {
+            list-style: none;
+        }
+
+        .job-list li {
+            padding: 5px 0;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        /* Panoul lateral dreapta */
         .right-panel {
             width: 200px;
             border-left: 1px solid #000;
@@ -100,14 +183,97 @@
 
     <div class="main-content">
         <div class="left-panel">
-            <button>Ocupatii</button>
-            <button>Skill-uri</button>
+            <!-- Ocupații -->
+            <div class="menu-container">
+                <button id="btn-ocupatii">Ocupații</button>
+                <div class="sub-panel" id="sub-ocupatii">
+                    <button>IT / Software</button>
+                    <button>Design</button>
+                </div>
+            </div>
+
+            <!-- Skill-uri interactiv -->
+            <div class="menu-container">
+                <button id="btn-skills">Skill-uri ▾</button>
+                <div class="sub-panel" id="sub-skills">
+                    <button class="skill-item" data-skill="js">JavaScript</button>
+                    <button class="skill-item" data-skill="ux">UI/UX Design</button>
+                    <button class="skill-item" data-skill="mgmt">Project Management</button>
+                </div>
+            </div>
         </div>
 
-        <div class="center-panel"></div>
+        <div class="center-panel" id="center-panel">
+            <div style="color: #888; text-align: center; margin-top: 50px;">
+                Selectează un skill din meniul din stânga pentru a vedea detaliile.
+            </div>
+        </div>
 
         <div class="right-panel"></div>
     </div>
+
+    <script>
+        // Date demo pentru skill-uri
+        const skillData = {
+            js: {
+                title: "JavaScript",
+                demand: "Cerere Foarte Mare",
+                desc: "Limbajul de programare de bază pentru dezvoltarea web. Permite crearea de pagini web interactive și este esențial pentru dezvoltarea aplicațiilor moderne.",
+                jobs: ["Frontend Developer", "Fullstack Developer", "Node.js Engineer"]
+            },
+            ux: {
+                title: "UI/UX Design",
+                demand: "Cerere Mare",
+                desc: "Proiectarea interfețelor de utilizator și definirea experienței digitale globale. Se concentrează pe uzabilitate, estetică și cercetarea comportamentului utilizatorilor.",
+                jobs: ["Product Designer", "UI Developer", "UX Researcher"]
+            },
+            mgmt: {
+                title: "Project Management",
+                demand: "Cerere Medie",
+                desc: "Organizarea, planificarea și executarea proiectelor în limitele de timp și buget stabilite. Necesită abilități excelente de comunicare și negociere.",
+                jobs: ["Project Manager", "Scrum Master", "Product Owner"]
+            }
+        };
+
+        // Elemente DOM
+        const btnOcupatii = document.getElementById('btn-ocupatii');
+        const subOcupatii = document.getElementById('sub-ocupatii');
+        const btnSkills = document.getElementById('btn-skills');
+        const subSkills = document.getElementById('sub-skills');
+        const centerPanel = document.getElementById('center-panel');
+
+        // Toggle pentru meniuri
+        btnOcupatii.addEventListener('click', () => {
+            subOcupatii.classList.toggle('active');
+        });
+
+        btnSkills.addEventListener('click', () => {
+            subSkills.classList.toggle('active');
+        });
+
+        // Event listener pentru selectarea unui skill
+        document.querySelectorAll('.skill-item').forEach(button => {
+            button.addEventListener('click', (e) => {
+                const skillKey = e.target.getAttribute('data-skill');
+                const data = skillData[skillKey];
+
+                if (data) {
+                    // Generăm dinamic cardul cu informații în panoul central
+                    centerPanel.innerHTML = `
+                        <div class="skill-card">
+                            <span class="skill-badge">${data.demand}</span>
+                            <h2>${data.title}</h2>
+                            <p>${data.desc}</p>
+                            <h3 style="margin-bottom: 8px; font-size: 1rem;">Joburi populare asociate:</h3>
+                            <ul class="job-list">
+                                ${data.jobs.map(job => `<li>${job}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+            });
+        });
+    </script>
 
 </body>
 </html>
