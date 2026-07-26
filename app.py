@@ -36,15 +36,24 @@ init_session_state()
 def get_smart_category(job_title):
     job_lower = job_title.lower()
     categories = {
-        "💻 IT & Software": ["software", "date", "rețea", "sistem", "aplicați", "web", "cloud", "securitate", "it", "informatic", "programator", "dezvoltator", "inteligență"],
-        "🏗️ Construcții & Arhitectură": ["construcți", "civil", "arhitect", "structur", "șantier", "clădiri", "topograf", "urbanism", "demolări", "hidrotehnic", "drumuri", "poduri"],
-        "⚙️ Mecanică & Industrial": ["mecanic", "industrial", "producție", "fabric", "mașini", "echipamente", "sudură", "metal", "ansambl", "mentenanț", "componente", "materiale"],
-        "⚡ Electric & Energie": ["electric", "energi", "electro", "iluminat", "baterii", "regenerabil", "termic", "nuclear"],
-        "📡 Telecomunicații & Electronică": ["electronic", "telecomunicați", "comunicați", "semnal", "radio", "audio", "video", "rețele"],
-        "⚕️ Sănătate & Biomedicină": ["medic", "clinic", "sănătate", "asistent", "terapeut", "farmac", "stomatolog", "biomedical", "aparate medicale"],
-        "🚚 Transport & Auto": ["transport", "auto", "aeronautic", "aerospațial", "naval", "feroviar", "logistic", "vehicul", "rutier"],
-        "📊 Management & Finanțe": ["manager", "director", "proiect", "afaceri", "vânzări", "marketing", "consultant", "hr", "resurse", "finanț", "contabil", "audit", "calitate", "fiabilitate"],
-        "🔬 Științe & Cercetare": ["cercet", "științ", "laborator", "geolog", "biolog", "chim", "fizic", "matematic", "mediu", "ecolog", "carier", "agricol"]
+        "💻 IT & Software": ["software", "date", "rețea", "sistem", "aplicați", "web", "cloud", "securitate", "it",
+                            "informatic", "programator", "dezvoltator", "inteligență"],
+        "🏗️ Construcții & Arhitectură": ["construcți", "civil", "arhitect", "structur", "șantier", "clădiri",
+                                         "topograf", "urbanism", "demolări", "hidrotehnic", "drumuri", "poduri"],
+        "⚙️ Mecanică & Industrial": ["mecanic", "industrial", "producție", "fabric", "mașini", "echipamente", "sudură",
+                                     "metal", "ansambl", "mentenanț", "componente", "materiale"],
+        "⚡ Electric & Energie": ["electric", "energi", "electro", "iluminat", "baterii", "regenerabil", "termic",
+                                 "nuclear"],
+        "📡 Telecomunicații & Electronică": ["electronic", "telecomunicați", "comunicați", "semnal", "radio", "audio",
+                                            "video", "rețele"],
+        "⚕️ Sănătate & Biomedicină": ["medic", "clinic", "sănătate", "asistent", "terapeut", "farmac", "stomatolog",
+                                      "biomedical", "aparate medicale"],
+        "🚚 Transport & Auto": ["transport", "auto", "aeronautic", "aerospațial", "naval", "feroviar", "logistic",
+                               "vehicul", "rutier"],
+        "📊 Management & Finanțe": ["manager", "director", "proiect", "afaceri", "vânzări", "marketing", "consultant",
+                                   "hr", "resurse", "finanț", "contabil", "audit", "calitate", "fiabilitate"],
+        "🔬 Științe & Cercetare": ["cercet", "științ", "laborator", "geolog", "biolog", "chim", "fizic", "matematic",
+                                  "mediu", "ecolog", "carier", "agricol"]
     }
 
     for cat, keywords in categories.items():
@@ -77,7 +86,9 @@ def login_page():
             "</div>", unsafe_allow_html=True)
 
         with st.form("login_form"):
-            st.markdown("<p style='font-family:Sora, sans-serif; font-weight:600; font-size:1.05rem; margin-bottom:0.6rem;'>Login</p>", unsafe_allow_html=True)
+            st.markdown(
+                "<p style='font-family:Sora, sans-serif; font-weight:600; font-size:1.05rem; margin-bottom:0.6rem;'>Login</p>",
+                unsafe_allow_html=True)
             email = st.text_input("Email", placeholder="nume@exemplu.com")
             password = st.text_input("Password", type="password", placeholder="••••••••")
 
@@ -121,7 +132,8 @@ def dashboard_page():
     _, col2, _ = st.columns([1, 2, 1])
     with col2:
         st.markdown('<div class="sj-search">', unsafe_allow_html=True)
-        search_query = st.text_input("Search", placeholder="Caută ocupatii (ex: inginer, constructii)...", label_visibility="collapsed")
+        search_query = st.text_input("Search", placeholder="Caută ocupatii (ex: inginer, constructii)...",
+                                     label_visibility="collapsed")
         st.markdown('</div>', unsafe_allow_html=True)
 
     if search_query != st.session_state.last_search_query:
@@ -134,7 +146,8 @@ def dashboard_page():
         matches = [j for j in JOBS if search_query.lower() in j.lower()]
         if matches:
             if not st.session_state.dash_search_group:
-                st.markdown(f'<p class="sj-section-title">Am găsit {len(matches)} rezultate. Alege specializarea:</p>', unsafe_allow_html=True)
+                st.markdown(f'<p class="sj-section-title">Am găsit {len(matches)} rezultate. Alege specializarea:</p>',
+                            unsafe_allow_html=True)
 
                 grouped_results = {}
                 for job in matches:
@@ -148,7 +161,8 @@ def dashboard_page():
                 cols = st.columns(2)
                 for i, (cat_name, cat_jobs) in enumerate(sorted_groups):
                     with cols[i % 2]:
-                        if st.button(f"{cat_name}\n({len(cat_jobs)} variante)", key=f"grp_{cat_name}", use_container_width=True):
+                        if st.button(f"{cat_name}\n({len(cat_jobs)} variante)", key=f"grp_{cat_name}",
+                                     use_container_width=True):
                             st.session_state.dash_search_group = cat_name
                             st.rerun()
 
@@ -229,8 +243,11 @@ _pages = [
     st.Page("pages/2_Categorii.py", title="Categorii", icon="🗂️", url_path="categorii"),
     st.Page("pages/1_Profil.py", title="Mini-CV / Profilare", icon="📝", url_path="profil"),
     st.Page("pages/6_Scanner_CV.py", title="Scanner CV (AI)", icon="🤖", url_path="scanner-cv"),
+    st.Page("pages/7_CV_Builder.py", title="CV Builder", icon="🧩", url_path="cv-builder"),
     st.Page("pages/4_Recomandari.py", title="Recomandările mele", icon="🎯", url_path="recomandari"),
-    st.Page("pages/3_Roadmap.py", title="Roadmap curent", icon="🗺️", url_path="roadmap")
+    st.Page("pages/3_Roadmap.py", title="Roadmap curent", icon="🗺️", url_path="roadmap"),
+    st.Page("pages/5_Detalii_Job.py", title="Detalii Ocupație", icon="📄", url_path="detalii-job"),
+    st.Page("pages/8_Joburi_Reale.py", title="Joburi Reale", icon="💼", url_path="joburi-reale")
 ]
 
 pg = st.navigation(_pages, position="hidden")

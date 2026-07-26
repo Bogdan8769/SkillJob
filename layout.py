@@ -45,6 +45,7 @@ def render_nav_sidebar():
         st.page_link("pages/2_Categorii.py", label="Categorii", icon="🗂️")
         st.page_link("pages/1_Profil.py", label="Mini-CV / Profilare", icon="📝")
         st.page_link("pages/6_Scanner_CV.py", label="Scanner CV (AI)", icon="🤖")
+        st.page_link("pages/7_CV_Builder.py", label="CV Builder Premium", icon="🧩")
 
         if st.session_state.get("recommendations"):
             st.page_link("pages/4_Recomandari.py", label="Recomandările mele", icon="🎯")
